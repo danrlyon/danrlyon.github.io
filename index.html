@@ -54,8 +54,8 @@
                   <ul class="dropdown-menu">
 					<li class="dropdown-header">Navigation</li>
 					<li role="separator" class="divider"></li>
-					<li><a href="#">Home</a></li>
-                    <li><a href="pages/About/about.html">About</a></li>
+					<li><a href="#projects_anchor">Projects</a></li>
+                    <li><a href="#about_anchor">About</a></li>
                     <li><a href="mailto:danrlyon.github.io@gmail.com">Contact</a></li>
                   </ul>
                 </li>
@@ -86,7 +86,7 @@
 				<h1>Professional Software and Electrical Engineer</h1>
               </div>
 			  <p>Specializing in embedded systems development for DC power converters, data harvesting, and automated controls.</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more!</a></p>
+              <p><a class="btn btn-lg btn-default" href="#about_anchor" role="button">Learn more!</a></p>
             </div>
           </div>
         </div>
@@ -96,7 +96,7 @@
             <div class="carousel-caption">
               <h1>Check out some of my work</h1>
               <p>From analog circuit design to web application development. Click the link below to see some of my open source projects!</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Dan's Projects</a></p>
+              <p><a class="btn btn-lg btn-default" href="#projects_anchor" role="button">Dan's Projects</a></p>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@
             <div class="carousel-caption">
               <h1>Contact Me</h1>
               <p>Looking for a well rounded developer for your next project?</p>
-              <p><a class="btn btn-lg btn-primary" href="mailto:danrlyon.github.io@gmail.com" role="button">Hit me up!</a></p>
+              <p><a class="btn btn-lg btn-default" href="mailto:danrlyon.github.io@gmail.com" role="button">Hit me up!</a></p>
             </div>
           </div>
         </div>
@@ -131,22 +131,26 @@
       <!-- Three columns of text below the carousel -->
       <div class="row">
         <div class="col-lg-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <img class="img-circle" src="assets/img/Embedded.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h2>Hardware</h2>
+          <p>Experienced in schematic and board layout design, firmware to drive the system, and peripheral devices with communication 
+		  and status displays. I take ideas and deliver products.</p>
+          <!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <img class="img-circle" src="assets/img/coding.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h2>Software</h2>
+          <p>When asked what language I code in, my answer is the language that gives me the tools I need to get the job done. I have made iOS, Android,
+		  and PC applications; I have made sensing and control systems for DC/DC converters and the implemented custom and standard communication 
+		  protocols in these devices.</p>
+          <!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <img class="img-circle" src="assets/img/arc.jpg", alt="Generic placeholder image" width="140" height="140">
+          <h2>Mechanical</h2>
+          <p>I spent a year training under a mechanical engineer and learning to build the mechanicals on the fly for spectrometers. 
+		  I love working with my hands and building things!</p>
+          <!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
@@ -155,13 +159,14 @@
 
       <hr class="featurette-divider">
 
-      <div class="row featurette">
+      <div class="row featurette" id="projects_anchor">
         <div class="col-md-7">
-          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+          <h2 class="featurette-heading">Post Master. <span class="text-muted">Ruby on Rails web app game</span></h2>
+          <p class="lead">A game to test how well you know your friends!</p>
+		  <p><a class="btn btn-default" href="https://radiant-coast-47913.herokuapp.com/" role="button">Check it out!</a></p>
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" src="assets/img/rails.png" alt="Generic placeholder image">
         </div>
       </div>
 
@@ -169,25 +174,36 @@
 
       <div class="row featurette">
         <div class="col-md-7 col-md-push-5">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+          <h2 class="featurette-heading">The Firefly. <span class="text-muted">A battery monitoring system.</span></h2>
+          <p class="lead">Rapidly developed prototype device with accompanying application and website for pulling battery system information 
+		  via Bluetooth and storing the data on a web server. You could set the location and view the logged data on the website, or view the live
+		  feed on the app to see your current status.</p>
         </div>
         <div class="col-md-5 col-md-pull-7">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" src="assets/img/mbed.jpg" alt="Generic placeholder image">
+        </div>
+      </div>
+	  
+	        <hr class="featurette-divider">
+
+      <div id= "about_anchor" class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading">About Me. <span class="text-muted">Full Stack Embedded Systems Engineer</span></h2>
+          <p class="lead">When I was a kid I wanted to be an inventor. As I grew older I realized that this is what engineers do! I dove in head 
+		  first and learned what I needed along the way. It sure wasn't easy, but the joy of overcoming challenges and building devices has been 
+		  worth the struggle. I have over 5 years of experience building 
+		  embedded systems and software, and I love what I do!</p>
+		  <p class="lead">Here are three words to describe me: ambitious, relentless, and nice! 
+		  If I want something, I do not relent (nothing motivates me to do something more than someone telling me that I can't). And throughout 
+		  all of my professional 
+		  and personal relationships I maintain that being a good person is most important.</p>
+		  <p><a class="btn btn-lg btn-default" href="mailto:danrlyon.github.io@gmail.com" role="button">Let's Talk!</a></p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" src="assets/img/selfie.jpg" alt="Generic placeholder image">
         </div>
       </div>
 
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
 
       <hr class="featurette-divider">
 
