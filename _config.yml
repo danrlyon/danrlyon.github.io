@@ -1,5 +1,5 @@
 # Site settings
-title: Dan's Blog
+title: Dan's Docs
 email: danrlyon.github.io@gmail.com
 description: >
   Tutorials and Docs publised by Dan.
@@ -16,7 +16,7 @@ bootwatch: cyborg
 # Build settings
 markdown: kramdown
 highlighter: rouge
-gems:
+plugins:
   - jekyll-feed
   - jekyll-redirect-from
   - jekyll-seo-tag
