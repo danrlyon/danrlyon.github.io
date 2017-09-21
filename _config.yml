@@ -4,7 +4,7 @@ email: danrlyon.github.io@gmail.com
 description: >
   Tutorials and Docs publised by Dan.
 
-baseurl: "/jekyll-doc-theme" # the subpath of your site, e.g. /blog/
+baseurl: "" # the subpath of your site, e.g. /blog/
 url: https://danrlyon.github.io # the base hostname & protocol for your site
 git_address: https://github.com/danrlyon/danrlyon.github.io
 #git_edit_address: https://github.com/aksakalli/jekyll-doc-theme/blob/gh-pages
