@@ -5,10 +5,10 @@ permalink: /docs/neon-cluster/
 
 ##### Table of Contents  
 [Intro](#intro)  
-[1. Install](#install)
-[2. Configure Cluster](#configure)
-[3. Start Cluster](#start)
-
+[1. Install](#install)  
+[2. Configure Cluster](#configure)  
+[3. Start Cluster](#start)  
+ 
 
 <a name="intro"/>
 ## Intro
