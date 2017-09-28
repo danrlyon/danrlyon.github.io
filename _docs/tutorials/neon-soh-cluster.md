@@ -70,7 +70,7 @@ eno1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         </div>
     </div>
     <div class="panel panel-danger">
-        <div class="panel-heading">WARNING</div>
+        <div class="panel-heading">IMPORTANT</div>
         <div class="panel-body">
             Critical notes that must not be ignored.
         </div>
@@ -102,12 +102,83 @@ eno1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 - PHP
 - Javascript (d3.js)
 
+###### Terminology
+
+*Node* -> Single server.
+
+*Cluster* -> The combination of nodes working together.
+
 ###### Notes
 For comments, questions, or mistakes found in this tutorial, please post an 
 issue on the site's [Github Issue Tracker](https://github.com/danrlyon/danrlyon.github.io/issues).
 
 <a name="install"/>
 ## 1. Install Software
+
+###### CentOS Install
+
+**Boot the Install Image**
+
+This tutorial does not cover the creation of a bootable USB flash drive. There 
+are plenty of [resources](https://www.google.com/search?q=how+to+create+a+bootable+usb&rlz=1C1GGRV_enUS748US748&oq=how+to+create&aqs=chrome.1.69i57j0j69i60j0l2j69i60.10392j0j8&sourceid=chrome&ie=UTF-8) 
+online that do a great job of covering the topic.
+
+<div class="panel panel-primary">
+    <div class="panel-heading">NOTE</div>
+    <div class="panel-body">
+        If you have an extra flash drive, you can make 2 bootable USB drives and
+        install CentOS on both machines simultaneously
+    </div>
+</div>
+
+<div class="panel panel-warning">
+    <div class="panel-heading">IMPORTANT</div>
+    <div class="panel-body">
+        At the time of writing, we are using <code>CentOS Linux release 7.4.1708 (Core)</code>, but
+        the latest release of CentOS 7 should be used to gaurantee compatibility with 
+        the latest versions of the cluster software.
+    </div>
+</div>
+
+These first few steps will require direct access to the server. In our (NEON's) 
+case this means either using the display and keyboard on the tower, or 
+connecting remotely via the "out of band" ethernet port. 
+
+On the first node, connect the USB drive and power up. While the server is 
+starting, press the \<DEL\> key to get into the BIOS boot options. Select the USB 
+drive as the boot device then exit and save the new configuration.
+
+<div class="panel panel-warning">
+    <div class="panel-heading">IMPORTANT</div>
+    <div class="panel-body">
+        If using different hardware, the key to enter the BIOS options could be 
+        sonething other than the Delete key.
+    </div>
+</div>
+
+The node should restart into the CentOS installation GUI. Select the option to 
+test the installation media before install.
+
+After starting the installation, select your language and keyboard layout at the
+welcome screen. At this point, you should be at a screen with all of the 
+installation options.
+
+**Configure NETWORK & HOSTNAME**
+
+1. Edit the *Host Name* as desired. In this example I will use D23-HLTH-LC2 (and 
+D23-HLTH-LC4 for the second node).
+2. Select you're network device (eno1 or similar), press *Configure...* 
+and manually assign a fixed IP address. Our Settings:
+    * IP address = "10.123.22.2"
+    * Netmask = "255.255.240.0"
+    * Gateway = "10.123.16.1"
+    * DNS = "10.203.22.41, 10.100.62.10, 8.8.8.8"
+3. Click the switch to turn on the network device.
+
+**Configure INSTALLATION DESTINATION**
+
+![alt text](https://github.com/danrlyon/danrlyon.github.io/tree/master/img/HD-Partition-Setup.png "CentoOS Installation Device")
+
 
 <a name="configure"/>
 ## 2. Configure Cluster
