@@ -16,6 +16,9 @@ cd jekyll-doc-theme
 
 # run jekyll with dependencies
 bundle exec jekyll serve
+
+# OR run on Cloud 9 
+jekyll serve --host $IP --port $PORT --baseurl ''
 ```
 
 ## License

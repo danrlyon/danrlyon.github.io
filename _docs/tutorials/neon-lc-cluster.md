@@ -1,6 +1,6 @@
 ---
-title: NEON Cluster Setup
-permalink: /docs/neon-cluster/
+title: NEON LC Cluster Setup
+permalink: /docs/neon-lc-cluster/
 ---
 
 ##### Table of Contents  

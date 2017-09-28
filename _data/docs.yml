@@ -12,4 +12,5 @@
 
 - title: Tutorials
   docs:
-  - neon-cluster
+  - neon-lc-cluster
+  - neon-soh-cluster
