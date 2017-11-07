@@ -241,7 +241,7 @@ options in the BIOS back to their original state  so that they will boot off of
 the local drive.
 
 <a name="configure"/>
-## 2. Configure Cluster
+## 2. Configure Cluster   
 
 
 
