@@ -70,9 +70,9 @@ eno1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         </div>
     </div>
     <div class="panel panel-danger">
-        <div class="panel-heading">IMPORTANT</div>
+        <div class="panel-heading">DANGER</div>
         <div class="panel-body">
-            Critical notes that must not be ignored.
+            Critical warnings that must not be ignored.
         </div>
     </div>
 </div>
@@ -175,6 +175,7 @@ D23-HLTH-LC2
     * Netmask = "255.255.240.0"
     * Gateway = "10.123.16.1"
     * DNS = "10.203.22.41, 10.100.62.10, 8.8.8.8"
+	* Search Domain = eco.neoninternal.org
     
 D23-HLTH-LC4 (same except for IP address)
     * IP address = "10.123.22.2"
@@ -183,7 +184,61 @@ D23-HLTH-LC4 (same except for IP address)
 
 **Configure INSTALLATION DESTINATION**
 
+Select the "INSTALLATION DESTINATION" button.
 
+<div class="panel panel-warning">
+    <div class="panel-heading">IMPORTANT</div>
+    <div class="panel-body">
+        If you are using new storage devices without any partitions on them,
+		then you can skip this comment. Otherwise you will need to follow these 
+		few steps to reclaim the space on your drives.<br/>
+		!!!PIC
+		Select both drives (but not the USB) to reclaim the space. Under "Other
+		Storage Options" choose to automatically consfigure partitioning and select
+		the checkbox to make additional space available.</br>
+		!!!PIC
+		There will be an option to "Delete all". Click this button and follow it with
+		the "Reclaim space" button. This will take you back to the home screen where you
+		will need to select "INSTALLATION DESTINATION" again. Now you are ready to 
+		proceed with the manual partitioning.
+    </div>
+</div>
+
+Select both storage devices (but not the USB) and under "Other Storage Options" choose 
+"I will configure partitioning". Then click Done to proceed.
+
+This will take you to the MANUAL PARTIONING page. First click the link to automatically 
+configure partitioning. This will lead you to the following default partition set up:
+
+!!!PIC5
+
+Highlight the "/home" partition first. make sure the device type is LVM and the
+file system is xfs, then click the button to modify the Volume Group. You can use 
+any name, but it should be consistent across the nodes. Select RAID Level "RAID1"
+and leave the other options as is:
+
+!!!PIC6
+
+We won't want any of the partitions to have too much space yet so we will decrease 
+the capacity of the "/home" and "/" partitions:
+
+!!!PIC7
+
+Finally, click Done and accept the changes.
+
+**Begin Installation**
+
+You are now ready to click the "Begin Installation" button.
+
+During the installation, you will need to set the root password and add an admin username 
+with Administrative priviledges.
+
+!!!PIC8
+
+Wait for the installation to complete. Once you have completed installing CentOS 7, 
+you will need to reboot the machine. Take this opportunity to change the boot 
+options in the BIOS back to their original state  so that they will boot off of 
+the local drive.
 
 <a name="configure"/>
 ## 2. Configure Cluster
