@@ -20,7 +20,7 @@ document. Some of the commands are modified for this specific application and we
 application onto the server.
 
 ###### Audience
-The typical audience for this tutorial will be a NEON employee looking to start a cluster and load the state of health application.
+This tutorial was written as a guide for a NEON employee looking to start a cluster and load the state of health application.
 
 This tutorial may also be used as a guideline for similar server configurations.
 
@@ -135,7 +135,7 @@ online that do a great job of covering the topic.
     <div class="panel-heading">IMPORTANT</div>
     <div class="panel-body">
         At the time of writing, we are using <code>CentOS Linux release 7.4.1708 (Core)</code>, but
-        the latest release of CentOS 7 should be used to gaurantee compatibility with 
+        the latest release of CentOS 7 should be used to guarantee compatibility with 
         the latest versions of the cluster software.
     </div>
 </div>
@@ -152,7 +152,7 @@ drive as the boot device then exit and save the new configuration.
     <div class="panel-heading">IMPORTANT</div>
     <div class="panel-body">
         If using different hardware, the key to enter the BIOS options could be 
-        sonething other than the Delete key.
+        something other than the Delete key.
     </div>
 </div>
 
@@ -169,19 +169,26 @@ installation options.
 D23-HLTH-LC4 for the second node).
 2. Select you're network device (eno1 or similar), press *Configure...* 
 and manually assign a fixed IP address. Our Settings:
+
+D23-HLTH-LC2
     * IP address = "10.123.22.2"
     * Netmask = "255.255.240.0"
     * Gateway = "10.123.16.1"
     * DNS = "10.203.22.41, 10.100.62.10, 8.8.8.8"
-3. Click the switch to turn on the network device.
+    
+D23-HLTH-LC4 (same except for IP address)
+    * IP address = "10.123.22.2"
+    
+3. Click the on screen switch to turn on the network device.
 
 **Configure INSTALLATION DESTINATION**
 
-![alt text](https://github.com/danrlyon/danrlyon.github.io/tree/master/img/HD-Partition-Setup.png "CentoOS Installation Device")
 
 
 <a name="configure"/>
 ## 2. Configure Cluster
+
+
 
 <a name="start"/>
 ## 3. Start Cluster
