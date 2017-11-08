@@ -517,11 +517,388 @@ This command generates the corosync configuration file stored at `/etc/corosync.
 <a name="start"/>
 ## 3. Start Cluster
 
+Now that corosync has been configured, go ahead and fire up the cluster:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster start --all
+d23-hlth-lc2: Starting Cluster...
+d23-hlth-lc4: Starting Cluster...
+```
+
+Now use the 'corosync-cfgtool' to check the cluste communication:
+
+```bash
+[root@d23-hlth-lc2 ~]# corosync-cfgtool -s
+Printing ring status.
+Local node ID 1
+RING ID 0
+        id      = 10.123.22.2
+        status  = ring 0 active with no faults
+```
+
+The `id` should be the fixed IP of the local machine, and not a loopback IP. And the status should have `no faults`.
+
+Now check the membership and quorum APIs:
+
+```bash
+[root@d23-hlth-lc2 ~]# corosync-cmapctl  | grep members
+runtime.totem.pg.mrp.srp.members.1.config_version (u64) = 0
+runtime.totem.pg.mrp.srp.members.1.ip (str) = r(0) ip(10.123.22.2)
+runtime.totem.pg.mrp.srp.members.1.join_count (u32) = 1
+runtime.totem.pg.mrp.srp.members.1.status (str) = joined
+runtime.totem.pg.mrp.srp.members.2.config_version (u64) = 0
+runtime.totem.pg.mrp.srp.members.2.ip (str) = r(0) ip(10.123.24.2)
+runtime.totem.pg.mrp.srp.members.2.join_count (u32) = 1
+runtime.totem.pg.mrp.srp.members.2.status (str) = joined
+
+[root@d23-hlth-lc2 ~]# pcs status corosync
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+         1          1 d23-hlth-lc2 (local)
+         2          1 d23-hlth-lc4
+```
+
+Now we will verify that the rest of the cluster stack is running:
+
+```bash
+[root@d23-hlth-lc2 ~]# ps axf | grep pacemaker | grep -v grep
+13279 ?        Ss     0:00 /usr/sbin/pacemakerd -f
+13280 ?        Ss     0:00  \_ /usr/libexec/pacemaker/cib
+13281 ?        Ss     0:00  \_ /usr/libexec/pacemaker/stonithd
+13282 ?        Ss     0:00  \_ /usr/libexec/pacemaker/lrmd
+13283 ?        Ss     0:00  \_ /usr/libexec/pacemaker/attrd
+13284 ?        Ss     0:00  \_ /usr/libexec/pacemaker/pengine
+13285 ?        Ss     0:00  \_ /usr/libexec/pacemaker/crmd
+
+[root@d23-hlth-lc2 ~]# ps axf | grep corosync | grep -v grep
+13272 ?        SLsl   0:10 corosync
+```
+
+If everything so far looks OK, then you can use `pcs status` to check the cluster status:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+WARNING: no stonith devices and stonith-enabled is not false
+Stack: corosync
+Current DC: d23-hlth-lc2 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 15:32:50 2017
+Last change: Wed Nov  8 15:15:09 2017 by hacluster via crmd on d23-hlth-lc2
+
+2 nodes configured
+0 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+No resources
+
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+The only errors or warnings you should see have to do with the lack of STONITH configuration. You can invesitgate in more detail with the following commands:
+
+```bash
+# journalctl | grep -i error
+```
+or
+```bash
+# cat /var/log/messages
+```
+
+To get rid of this warning, we will disable STONITH. First check that we are seeing STONITH errors:
+
+```bash
+[root@d23-hlth-lc2 ~]# crm_verify -LV
+   error: unpack_resources:     Resource start-up disabled since no STONITH resources have been defined
+   error: unpack_resources:     Either configure some or disable STONITH with the stonith-enabled option
+   error: unpack_resources:     NOTE: Clusters with shared data need STONITH to ensure data integrity
+Errors found during check: config not valid
+[root@d23-hlth-lc2 ~]# crm_verify -L -V
+   error: unpack_resources:     Resource start-up disabled since no STONITH resources have been defined
+   error: unpack_resources:     Either configure some or disable STONITH with the stonith-enabled option
+   error: unpack_resources:     NOTE: Clusters with shared data need STONITH to ensure data integrity
+Errors found during check: config not valid
+```
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs property set stonith-enabled=false
+[root@d23-hlth-lc2 ~]# crm_verify -L -V
+```
+
+<div class="panel panel-danger">
+	<div class="panel-heading">DANGER</div>
+	<div class="panel-body">
+		The use of stonith-enabled=false is completely inappropriate for a production cluster. It tells the cluster to simply pretend that failed nodes are safely powered off. We will fix this later in this tutorial.
+	</div>
+</div>
+
+
+## 3. Add Cluster IP Resource
+
+The first resource we will add is the cluster IP address:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs resource create ClusterIP ocf:heartbeat:IPaddr2 ip=10.123.31.2 cidr_netmask=20 op monitor interval=30s
+```
+Then you can verify that the resource is active:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc2 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 16:38:23 2017
+Last change: Wed Nov  8 16:37:30 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+1 resource configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+After adding each resource, it is useful to perform a simulated failover. We will do this by stopping the cluster on the node running `ClusterIP`.
+
+```bash
+[root@d23-hlth-lc4 ~]# pcs cluster stop d23-hlth-lc2
+d23-hlth-lc2: Stopping Cluster (pacemaker)...
+d23-hlth-lc2: Stopping Cluster (corosync)...
+
+[root@d23-hlth-lc4 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 21:41:21 2017
+Last change: Wed Nov  8 21:37:30 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+1 resource configured
+
+Online: [ d23-hlth-lc4 ]
+OFFLINE: [ d23-hlth-lc2 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc4
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+You can see that the node "d23-hlth-lc2" is offline. Go ahead and restart this node and verify that it comes back online:
+
+```bash
+[root@d23-hlth-lc4 ~]# pcs cluster start d23-hlth-lc2
+d23-hlth-lc2: Starting Cluster...
+```
+
+```bash
+[root@d23-hlth-lc4 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 21:49:23 2017
+Last change: Wed Nov  8 21:37:30 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+1 resource configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc4
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+To prevent resources from moving we can apply a default resource stickiness which controls how stronly a service prefers to stay running where it is. Run the following command to set the stickiness for all resources:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs resource defaults resource-stickiness=100
+[root@d23-hlth-lc2 ~]# pcs resource defaults
+resource-stickiness: 100
+```
+
+## 3. Add Apache HTTP Server Resource
+
+**Install Apache**
+
+Before adding the resource, we must install Apache on both nodes:
+
+```bash
+# yum install -y httpd wget
+# firewall-cmd --permanent --add-service=http
+# firewall-cmd --reload
+```
+
+<div class="panel panel-warning">
+	<div class="panel-heading">IMPORTANT</div>
+	<div class="panel-body">
+		Do not enable the httpd service. Services that are intended to be managed via the cluster software should never be managed by the OS.
+It is often useful, however, to manually start the service, verify that it works, then stop it again, before adding it to the cluster. This allows you to resolve any non-cluster-related problems before continuing. Since this is a simple example, we’ll skip that step here.
+	</div>
+</div>
+
+**Create Test Page**
+
+This simple index.html will allow us to see if Apache is properly hosting our site:
+
+```bash
+# cat <<-END >/var/www/html/index.html
+ <html>
+ <body>My Test Site - $(hostname)</body>
+ </html>
+END
+```
+
+**Enable the Apache status URL**
+
+Enabling the apache status URL is required to monitor the health of your Apache instance. Enable the URL on both nodes with:
+
+```bash
+# cat <<-END >/etc/httpd/conf.d/status.conf
+ <Location /server-status>
+    SetHandler server-status
+    Require local
+ </Location>
+END
+```
+
+**Add the Apache Resource**
+
+Apache is installed and ready to go. Now we will create a "WebSite" resource for the cluster:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs resource create WebSite ocf:heartbeat:apache configfile=/etc/httpd/conf/httpd.conf statusurl="http://localhost/server-status" op monitor interval=1min
+```
+
+By default the timeout for all resources' start, stop, and monitor operations is 20 seconds. This is timeout period is too short for many resources fo for now we will adjust the default resources' operation timeout to 240 seconds:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs resource op defaults timeout=240s
+[root@d23-hlth-lc2 ~]# pcs resource op defaults
+timeout: 240s
+```
+
+After some time, you will see the cluster start Apache:
+
+```bash
+[root@d23-hlth-lc4 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 22:58:56 2017
+Last change: Wed Nov  8 22:52:34 2017 by root via crm_attribute on d23-hlth-lc2
+
+2 nodes configured
+2 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc4
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+**Ensure Resources Run on the Same Host**
+
+We will use colocation constraints to make sure that all of the resources are running on one node. For now, we only have two services to colocate:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs constraint colocation add WebSite with ClusterIP INFINITY
+[root@d23-hlth-lc2 ~]# pcs constraint
+Location Constraints:
+Ordering Constraints:
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Wed Nov  8 18:01:51 2017
+Last change: Wed Nov  8 18:01:36 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+2 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc4
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc4
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+**Ensure ClusterIP starts before WebSite**
+
+Apache may need to bind to a certain IP address, so to avoid any issues we set the ClusterIP to start before the Apache Server:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs constraint
+Location Constraints:
+Ordering Constraints:
+  start ClusterIP then start WebSite (kind:Mandatory)
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]#
+```
 
 
 
 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
