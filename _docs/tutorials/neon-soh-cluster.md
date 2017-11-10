@@ -639,7 +639,7 @@ Errors found during check: config not valid
 </div>
 
 
-## 3. Add Cluster IP Resource
+## 4. Add Cluster IP Resource
 
 The first resource we will add is the cluster IP address:
 
@@ -739,7 +739,7 @@ To prevent resources from moving we can apply a default resource stickiness whic
 resource-stickiness: 100
 ```
 
-## 3. Add Apache HTTP Server Resource
+## 5. Add Apache HTTP Server Resource
 
 **Install Apache**
 
@@ -876,6 +876,67 @@ Ticket Constraints:
 [root@d23-hlth-lc2 ~]#
 ```
 
+## 6. Website DRBD
+
+**Install DRBD Packages**
+
+Enable the third party repositories.
+
+```bash
+# rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+# rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+```
+
+Next, install the DRBD kernel module and utilities:
+
+```bash
+# yum install -y kmod-drbd84 drbd84-utils
+```
+
+<div class="panel panel-warning">
+	<div class="panel-heading">IMPORTANT</div>
+	<div class="panel-body">
+		The version of drbd84-utils shipped with CentOS 7.1 has a bug in the Pacemaker integration script. Until a fix is packaged, download the affected script directly from the upstream, on both nodes:
+		<br/><br/>
+		# curl -o /usr/lib/ocf/resource.d/linbit/drbd 'http://git.linbit.com/gitweb.cgi?p=drbd-utils.git;a=blob_plain;f=scripts/drbd.ocf;h=cf6b966341377a993d1bf5f585a5b9fe72eaa5f2;hb=c11ba026bbbbc647b8112543df142f2185cb4b4b'
+		<br/><br/>
+		This is a temporary fix that will be overwritten if the package is upgraded.
+	</div>
+</div>
+
+Exempt DRBD processes from SELinux control since it will not be able to run under the default security policies.
+
+```bash
+# semanage permissive -a drbd_t
+```
+
+We will be using ports 7789 through 7791 for drbd, so go ahead and allow these ports from each host to the other:
+
+```bash
+[root@d23-hlth-lc2 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.24.2" port port="7789" protocol="tcp" accept'
+success
+[root@d23-hlth-lc2 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.24.2" port port="7790" protocol="tcp" accept'
+success
+[root@d23-hlth-lc2 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.24.2" port port="7791" protocol="tcp" accept'
+success
+[root@d23-hlth-lc2 ~]# firewall-cmd --reload
+success
+```
+
+```bash
+[root@d23-hlth-lc4 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.22.2" port port="7789" protocol="tcp" accept'
+success
+[root@d23-hlth-lc4 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.22.2" port port="7790" protocol="tcp" accept'
+success
+[root@d23-hlth-lc4 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.123.22.2" port port="7791" protocol="tcp" accept'
+success
+[root@d23-hlth-lc4 ~]# firewall-cmd --reload
+success
+```
+
+**Allocate DRBD disk volumes**
+
+We will go ahead and allocate disk volumes for all of our DRBD resources:
 
 
 
