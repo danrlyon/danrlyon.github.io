@@ -210,6 +210,8 @@ Select both storage devices (but not the USB) and under "Other Storage Options" 
 This will take you to the MANUAL PARTIONING page. First click the link to automatically 
 configure partitioning. This will lead you to the following default partition set up:
 
+First select "Modify..." by the volume group name. Change to RAID1 and set the size policy to "As large as possible".
+
 !!!PIC5
 
 Highlight the "/home" partition first. make sure the device type is LVM and the
@@ -866,6 +868,7 @@ Daemon Status:
 Apache may need to bind to a certain IP address, so to avoid any issues we set the ClusterIP to start before the Apache Server:
 
 ```bash
+[root@d23-hlth-lc2 ~]# pcs constraint order ClusterIP then WebSite
 [root@d23-hlth-lc2 ~]# pcs constraint
 Location Constraints:
 Ordering Constraints:
@@ -873,7 +876,6 @@ Ordering Constraints:
 Colocation Constraints:
   WebSite with ClusterIP (score:INFINITY)
 Ticket Constraints:
-[root@d23-hlth-lc2 ~]#
 ```
 
 ## 6. Website DRBD
@@ -937,6 +939,234 @@ success
 **Allocate DRBD disk volumes**
 
 We will go ahead and allocate disk volumes for all of our DRBD resources:
+
+*Logical Volumes to be Created* 
+- drbd-web: 10 GB
+- drbd-sql: 200 GB
+- drbd-sensors: 5 GB
+
+View the space remaining in your volume group, and create the logical volumes:
+
+```bash
+[root@d23-hlth-lc2 ~]# vgdisplay | grep -e Name -e Free
+  VG Name               centos_d23-hlth-lc2
+  Free  PE / Size       234757 / <917.02 GiB
+[root@d23-hlth-lc2 ~]# lvcreate --name drbd-web --size 10G centos_d23-hlth-lc2
+  Logical volume "drbd-web" created.
+[root@d23-hlth-lc2 ~]# lvcreate --name drbd-sql --size 200G centos_d23-hlth-lc2
+  Logical volume "drbd-sql" created.
+[root@d23-hlth-lc2 ~]# lvcreate --name drbd-sensors --size 5G centos_d23-hlth-lc2
+  Logical volume "drbd-sensors" created.
+[root@d23-hlth-lc2 ~]# lvs
+  LV           VG                  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  drbd-sensors centos_d23-hlth-lc2 -wi-a-----   5.00g
+  drbd-sql     centos_d23-hlth-lc2 -wi-a----- 200.00g
+  drbd-web     centos_d23-hlth-lc2 -wi-a-----  10.00g
+  home         centos_d23-hlth-lc2 -wi-ao---- 500.00m
+  root         centos_d23-hlth-lc2 -wi-ao----   5.00g
+  swap         centos_d23-hlth-lc2 -wi-ao----  <7.88g
+```
+
+Repeat these steps on the second node:
+
+```bash
+[root@d23-hlth-lc4 ~]# vgdisplay | grep -e Name -e Free
+  VG Name               centos_d23-hlth-lc4
+  Free  PE / Size       234757 / <917.02 GiB
+[root@d23-hlth-lc4 ~]# lvcreate --name drbd-web --size 10G centos_d23-hlth-lc4
+  Logical volume "drbd-web" created.
+[root@d23-hlth-lc4 ~]# lvcreate --name drbd-sql --size 200G centos_d23-hlth-lc4
+  Logical volume "drbd-sql" created.
+[root@d23-hlth-lc4 ~]# lvcreate --name drbd-sensors --size 5G centos_d23-hlth-lc4
+  Logical volume "drbd-sensors" created.
+[root@d23-hlth-lc4 ~]# lvs
+  LV           VG                  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  drbd-sensors centos_d23-hlth-lc4 -wi-a-----   5.00g
+  drbd-sql     centos_d23-hlth-lc4 -wi-a----- 200.00g
+  drbd-web     centos_d23-hlth-lc4 -wi-a-----  10.00g
+  home         centos_d23-hlth-lc4 -wi-ao---- 500.00m
+  root         centos_d23-hlth-lc4 -wi-ao----   5.00g
+  swap         centos_d23-hlth-lc4 -wi-ao----  <7.88g
+```
+
+Next we will need to define the drbd resources. These files should be identical on both nodes. See below the examples from one node:
+
+```bash
+[root@d23-hlth-lc2 ~]# cat /etc/drbd.d/wwwdata.res
+resource wwwdata {
+    protocol C;
+    syncer {
+        verify-alg sha1;
+    }
+    net {
+        allow-two-primaries no;
+    }
+    volume 0 {
+        meta-disk internal;
+        device /dev/drbd1;
+    }
+    on d23-hlth-lc2 {
+        disk /dev/centos_d23-hlth-lc2/drbd-web;
+        address 10.123.22.2:7789;
+    }
+    on d23-hlth-lc4 {
+        disk /dev/centos_d23-hlth-lc4/drbd-web;
+        address 10.123.24.2:7789;
+    }
+}
+
+[root@d23-hlth-lc2 ~]# cat /etc/drbd.d/mysql.res
+resource mysql {
+ protocol C;
+ meta-disk internal;
+ device /dev/drbd0;
+ handlers {
+  split-brain "/usr/lib/drbd/notify-split-brain.sh root";
+ }
+ net {
+  allow-two-primaries no;
+  after-sb-0pri discard-zero-changes;
+  after-sb-1pri discard-secondary;
+  after-sb-2pri disconnect;
+  rr-conflict disconnect;
+ }
+ disk {
+  on-io-error detach;
+ }
+ syncer {
+  verify-alg sha1;
+ }
+ on d23-hlth-lc2 {
+  disk   /dev/centos_d23-hlth-lc2/drbd-sql;
+  address  10.123.22.2:7791;
+ }
+ on d23-hlth-lc4 {
+  disk   /dev/centos_d23-hlth-lc4/drbd-sql;
+  address  10.123.24.2:7791;
+ }
+}
+
+[root@d23-hlth-lc2 ~]# cat /etc/drbd.d/sensors.res
+resource sensors {
+    protocol C;
+    syncer {
+        verify-alg sha1;
+    }
+    net {
+        allow-two-primaries no;
+    }
+    volume 0 {
+        meta-disk internal;
+        device /dev/drbd2;
+    }
+    on d23-hlth-lc2 {
+        disk /dev/centos_d23-hlth-lc2/drbd-sensors;
+        address 10.123.22.2:7790;
+    }
+    on d23-hlth-lc4 {
+        disk /dev/centos_d23-hlth-lc4/drbd-sensors;
+        address 10.123.24.2:7790;
+    }
+}
+```
+
+And you can copy these files to the second node directly using `scp`:
+
+```bash
+[root@d23-hlth-lc2 ~]# scp -r /etc/drbd.d/* root@d23-hlth-lc4:/etc/drbd.d
+global_common.conf                                                    100% 2563     3.8MB/s   00:00
+mysql.res                                                             100%  565    45.8KB/s   00:00
+sensors.res                                                           100%  434   446.8KB/s   00:00
+wwwdata.res                                                           100%  429   493.3KB/s   00:00
+```
+
+**Initialize DRBD**
+
+Create the resources, ensure the DRBD kernel is loaded, and bring up the resources:
+
+```bash
+[root@d23-hlth-lc2 ~]# drbdadm create-md wwwdata
+initializing activity log
+initializing bitmap (320 KB) to all zero
+Writing meta data...
+New drbd meta data block successfully created.
+success
+[root@d23-hlth-lc2 ~]# drbdadm create-md mysql
+initializing activity log
+initializing bitmap (6400 KB) to all zero
+Writing meta data...
+New drbd meta data block successfully created.
+success
+[root@d23-hlth-lc2 ~]# drbdadm create-md sensors
+initializing activity log
+initializing bitmap (160 KB) to all zero
+Writing meta data...
+New drbd meta data block successfully created.
+success
+[root@d23-hlth-lc2 ~]# modprobe drbd
+[root@d23-hlth-lc2 ~]# drbdadm up wwwdata
+[root@d23-hlth-lc2 ~]# drbdadm up mysql
+[root@d23-hlth-lc2 ~]# drbdadm up sensors
+```
+
+And confirm the status of DRBD on this node:
+
+```bash
+[root@d23-hlth-lc2 ~]# cat /proc/drbd
+version: 8.4.10-1 (api:1/proto:86-101)
+GIT-hash: a4d5de01fffd7e4cde48a080e2c686f9e8cebf4c build by mockbuild@, 2017-09-15 14:23:22
+ 0: cs:WFConnection ro:Secondary/Unknown ds:Inconsistent/DUnknown C r----s
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:209708764
+ 1: cs:WFConnection ro:Secondary/Unknown ds:Inconsistent/DUnknown C r----s
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:10485404
+ 2: cs:WFConnection ro:Secondary/Unknown ds:Inconsistent/DUnknown C r----s
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:5242684
+```
+
+Repeat the steps to create the meta-data on the second node. Afterwards you should see that the two nodes are now connected:
+
+```bash
+[root@d23-hlth-lc4 ~]# cat /proc/drbd
+version: 8.4.10-1 (api:1/proto:86-101)
+GIT-hash: a4d5de01fffd7e4cde48a080e2c686f9e8cebf4c build by mockbuild@, 2017-09-15 14:23:22
+ 0: cs:Connected ro:Secondary/Secondary ds:Inconsistent/Inconsistent C r-----
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:209708764
+ 1: cs:Connected ro:Secondary/Secondary ds:Inconsistent/Inconsistent C r-----
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:10485404
+ 2: cs:Connected ro:Secondary/Secondary ds:Inconsistent/Inconsistent C r-----
+    ns:0 nr:0 dw:0 dr:0 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:5242684
+```
+
+Now that the state has changed to connected on both nodes, pick one node to be the master (in our case lc2). You will notice that the devices are syncing after you set on device as the master:
+
+```bash
+[root@d23-hlth-lc2 ~]# drbdadm primary --force wwwdata
+[root@d23-hlth-lc2 ~]# drbdadm primary --force mysql
+[root@d23-hlth-lc2 ~]# drbdadm primary --force sensors
+[root@d23-hlth-lc2 ~]# cat /proc/drbd
+version: 8.4.10-1 (api:1/proto:86-101)
+GIT-hash: a4d5de01fffd7e4cde48a080e2c686f9e8cebf4c build by mockbuild@, 2017-09-15 14:23:22
+ 0: cs:SyncSource ro:Primary/Secondary ds:UpToDate/Inconsistent C r-----
+    ns:22536 nr:0 dw:0 dr:24664 al:8 bm:0 lo:7 pe:0 ua:7 ap:0 ep:1 wo:f oos:209686228
+        [>....................] sync'ed:  0.1% (204768/204792)M
+        finish: 17:52:57 speed: 3,216 (3,216) K/sec
+ 1: cs:SyncSource ro:Primary/Secondary ds:UpToDate/Inconsistent C r-----
+    ns:67416 nr:0 dw:0 dr:69536 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:10417988
+        [>....................] sync'ed:  0.7% (10172/10236)M
+        finish: 0:30:49 speed: 5,616 (5,616) K/sec
+ 2: cs:SyncSource ro:Primary/Secondary ds:UpToDate/Inconsistent C r-----
+    ns:5068 nr:0 dw:0 dr:7164 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:5237616
+        [>....................] sync'ed:  0.2% (5112/5116)M
+        finish: 0:50:21 speed: 1,688 (1,688) K/sec
+```
+
+Now we wait for the syncing to complete. Once it's done you will see that the primary and secondary are both up to date:
+
+```bash
+
+```
+
+
 
 
 
