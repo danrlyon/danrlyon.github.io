@@ -880,6 +880,113 @@ Ticket Constraints:
 
 ## 6. Website DRBD
 
+**Update Kernel**
+
+```bash
+[root@d23-hlth-lc2 ~]# uname -sr
+Linux 3.10.0-693.el7.x86_64
+[root@d23-hlth-lc2 ~]# rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+[root@d23-hlth-lc2 ~]# rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+Retrieving http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+Retrieving http://elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+Preparing...                          ################################# [100%]
+        package elrepo-release-7.0-3.el7.elrepo.noarch is already installed
+[root@d23-hlth-lc2 ~]# yum --disablerepo="*" --enablerepo="elrepo-kernel" list available
+Loaded plugins: fastestmirror
+elrepo-kernel                                                                                                                                                                                                | 2.9 kB  00:00:00
+elrepo-kernel/primary_db                                                                                                                                                                                     | 1.7 MB  00:00:00
+Loading mirror speeds from cached hostfile
+ * elrepo-kernel: elrepo.org
+Available Packages
+kernel-lt.x86_64                                                                                                  4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-devel.x86_64                                                                                            4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-doc.noarch                                                                                              4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-headers.x86_64                                                                                          4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-tools.x86_64                                                                                            4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-tools-libs.x86_64                                                                                       4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-lt-tools-libs-devel.x86_64                                                                                 4.4.97-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml.x86_64                                                                                                  4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-devel.x86_64                                                                                            4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-doc.noarch                                                                                              4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-headers.x86_64                                                                                          4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-tools.x86_64                                                                                            4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-tools-libs.x86_64                                                                                       4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+kernel-ml-tools-libs-devel.x86_64                                                                                 4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+perf.x86_64                                                                                                       4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+python-perf.x86_64                                                                                                4.14.0-1.el7.elrepo                                                                                  elrepo-kernel
+[root@d23-hlth-lc2 ~]# yum --enablerepo=elrepo-kernel install kernel-ml
+Loaded plugins: fastestmirror
+base                                                                                                                                                                                                         | 3.6 kB  00:00:00
+elrepo                                                                                                                                                                                                       | 2.9 kB  00:00:00
+extras                                                                                                                                                                                                       | 3.4 kB  00:00:00
+mysql-connectors-community                                                                                                                                                                                   | 2.5 kB  00:00:00
+mysql-tools-community                                                                                                                                                                                        | 2.5 kB  00:00:00
+mysql56-community                                                                                                                                                                                            | 2.5 kB  00:00:00
+updates                                                                                                                                                                                                      | 3.4 kB  00:00:00
+extras/7/x86_64/primary_db                                                                                                                                                                                   | 130 kB  00:00:00
+Loading mirror speeds from cached hostfile
+ * base: mirror.genesisadaptive.com
+ * elrepo: elrepo.org
+ * elrepo-kernel: elrepo.org
+ * extras: mirror.team-cymru.org
+ * updates: repo1.sea.innoscale.net
+Resolving Dependencies
+--> Running transaction check
+---> Package kernel-ml.x86_64 0:4.14.0-1.el7.elrepo will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+====================================================================================================================================================================================================================================
+ Package                                             Arch                                             Version                                                         Repository                                               Size
+====================================================================================================================================================================================================================================
+Installing:
+ kernel-ml                                           x86_64                                           4.14.0-1.el7.elrepo                                             elrepo-kernel                                            43 M
+
+Transaction Summary
+====================================================================================================================================================================================================================================
+Install  1 Package
+
+Total download size: 43 M
+Installed size: 192 M
+Is this ok [y/d/N]: y
+Downloading packages:
+kernel-ml-4.14.0-1.el7.elrepo.x86_64.rpm                                                                                                                                                                     |  43 MB  00:00:04
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : kernel-ml-4.14.0-1.el7.elrepo.x86_64                                                                                                                                                                             1/1
+  Verifying  : kernel-ml-4.14.0-1.el7.elrepo.x86_64                                                                                                                                                                             1/1
+
+Installed:
+  kernel-ml.x86_64 0:4.14.0-1.el7.elrepo
+
+Complete!
+# reboot
+```
+
+```bash
+[root@d23-hlth-lc2 ~]# nano /etc/default/grub
+[root@d23-hlth-lc2 ~]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-4.14.0-1.el7.elrepo.x86_64
+Found initrd image: /boot/initramfs-4.14.0-1.el7.elrepo.x86_64.img
+Found linux image: /boot/vmlinuz-3.10.0-693.5.2.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-693.5.2.el7.x86_64.img
+Found linux image: /boot/vmlinuz-3.10.0-693.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-693.el7.x86_64.img
+Found linux image: /boot/vmlinuz-0-rescue-e229e1ce434e4575be5769136cf0a948
+Found initrd image: /boot/initramfs-0-rescue-e229e1ce434e4575be5769136cf0a948.img
+done
+# reboot
+```
+
+```bash
+[root@d23-hlth-lc2 ~]# uname -sr
+Linux 4.14.0-1.el7.elrepo.x86_64
+```
+
 **Install DRBD Packages**
 
 Enable the third party repositories.
@@ -1163,20 +1270,574 @@ GIT-hash: a4d5de01fffd7e4cde48a080e2c686f9e8cebf4c build by mockbuild@, 2017-09-
 Now we wait for the syncing to complete. Once it's done you will see that the primary and secondary are both up to date:
 
 ```bash
+[root@d23-hlth-lc2 ~]# cat /proc/drbd
+version: 8.4.10-1 (api:1/proto:86-101)
+GIT-hash: a4d5de01fffd7e4cde48a080e2c686f9e8cebf4c build by mockbuild@, 2017-09-15 14:23:22
+ 0: cs:Connected ro:Primary/Secondary ds:UpToDate/UpToDate C r-----
+    ns:209708764 nr:0 dw:0 dr:209710892 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:0
+ 1: cs:Connected ro:Primary/Secondary ds:UpToDate/UpToDate C r-----
+    ns:10485404 nr:0 dw:0 dr:10487524 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:0
+ 2: cs:Connected ro:Primary/Secondary ds:UpToDate/UpToDate C r-----
+    ns:5242684 nr:0 dw:0 dr:5244780 al:8 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:0
+```
 
+**Populate the DRBD disks**
+
+On the primary node, create a filesystem on the DRBD devices:
+
+```bash
+[root@d23-hlth-lc2 ~]# mkfs.xfs /dev/drbd0
+meta-data=/dev/drbd0             isize=512    agcount=4, agsize=13106798 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=52427191, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=25599, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[root@d23-hlth-lc2 ~]# mkfs.xfs /dev/drbd1
+meta-data=/dev/drbd1             isize=512    agcount=4, agsize=655338 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2621351, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[root@d23-hlth-lc2 ~]# mkfs.xfs /dev/drbd2
+meta-data=/dev/drbd2             isize=512    agcount=4, agsize=327668 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=1310671, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+```
+
+Prepare each of the DRBD devices with some content:
+
+drbd0 - MySQL Resource
+```bash
+[root@d23-hlth-lc2 ~]# wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+--2017-11-14 02:07:50--  http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+Resolving repo.mysql.com (repo.mysql.com)... 23.44.160.128
+Connecting to repo.mysql.com (repo.mysql.com)|23.44.160.128|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 6140 (6.0K) [application/x-redhat-package-manager]
+Saving to: ‘mysql-community-release-el7-5.noarch.rpm’
+
+100%[=======================================>] 6,140       --.-K/s   in 0s
+
+2017-11-14 02:07:50 (405 MB/s) - ‘mysql-community-release-el7-5.noarch.rpm’ saved [6140/6140]
+
+[root@d23-hlth-lc2 ~]# rpm -ivh mysql-community-release-el7-5.noarch.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:mysql-community-release-el7-5    ################################# [100%]
+[root@d23-hlth-lc2 ~]# yum update
+Loaded plugins: fastestmirror
+base                                                      | 3.6 kB  00:00:00
+elrepo                                                    | 2.9 kB  00:00:00
+.
+.
+.
+Installed:
+  mysql-community-libs.x86_64 0:5.6.38-2.el7
+
+Dependency Installed:
+  mysql-community-common.x86_64 0:5.6.38-2.el7
+
+Replaced:
+  mariadb-libs.x86_64 1:5.5.56-2.el7
+
+Complete!
+[root@d23-hlth-lc2 ~]# yum install mysql-server
+[root@d23-hlth-lc2 ~]# systemctl disable mysql
+Removed symlink /etc/systemd/system/multi-user.target.wants/mysqld.service.
+Removed symlink /etc/systemd/system/mysql.service.
+[root@d23-hlth-lc2 ~]# systemctl start mysqld
+[root@d23-hlth-lc2 ~]# mount /dev/drbd0 /mnt
+[root@d23-hlth-lc2 ~]# mysql_install_db --datadir=/mnt --user=mysql
+[root@d23-hlth-lc2 ~]# mysql_secure_installation
+[root@d23-hlth-lc2 ~]# semanage fcontext -a -t mysqld_db_t "/mnt(/.*)?"
+[root@d23-hlth-lc2 ~]# restorecon -Rv /mnt
+[root@d23-hlth-lc2 ~]# umount /mnt/
+[root@d23-hlth-lc2 ~]# systemctl stop mysqld
+```
+
+**Configure the Cluster for the Webpage DRBD Device**
+
+drbd1 - WebData Resource
+```bash
+[root@d23-hlth-lc2 ~]# mount /dev/drbd1 /mnt/
+[root@d23-hlth-lc2 ~]# cat <<-END >/mnt/index.html
+> <html>
+>   <body>My test site - DRBD</body>
+> <html>
+> END
+[root@d23-hlth-lc2 ~]# chcon -R --reference=/var/www/html /mnt
+[root@d23-hlth-lc2 ~]# umount /dev/drbd1
+```
+
+drbd2 - Sensors resource
+```bash
+[root@d23-hlth-lc2 ~]# mount /dev/drbd2 /mnt/
+[root@d23-hlth-lc2 ~]# mkdir /mnt/sensors
+[root@d23-hlth-lc2 ~]# chcon -R --reference=/home /mnt
+[root@d23-hlth-lc2 ~]# umount /dev/drbd2
+```
+
+**Configure Cluster for the DRBD devices**
+
+For each DRBD resource to be managed by the cluster, create a CIB config file, push changes to the cluster, and verify that the configuration is correct:
+
+drbd0 - MySQL and Filesystem
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster cib mysql-drbd_cfg
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg resource create MySQLData ocf:linbit:drbd drbd_resource=mysql op monitor interval=30s
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg resource master MySQLDataClone MySQLData master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg resource create MySQLFS Filesystem device="/dev/drbd0" directory="/var/lib/mysql" fstype="xfs"
+Assumed agent name 'ocf:heartbeat:Filesystem' (deduced from 'Filesystem')
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg constraint colocation add MySQLFS with MySQLDataClone INFINITY with-rsc-role=Master
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg constraint order promote MySQLDataClone then start MySQLFS
+Adding MySQLDataClone MySQLFS (kind: Mandatory) (Options: first-action=promote then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg constraint colocation add WebSite with MySQLFS INFINITY
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg constraint order MySQLFS then WebSite
+Adding MySQLFS WebSite (kind: Mandatory) (Options: first-action=start then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg resource show
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Stopped: [ d23-hlth-lc2 d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Stopped
+[root@d23-hlth-lc2 ~]# pcs -f mysql-drbd_cfg constraint
+Location Constraints:
+Ordering Constraints:
+  start ClusterIP then start WebSite (kind:Mandatory)
+  promote WebDataClone then start WebDataFS (kind:Mandatory)
+  start WebDataFS then start WebSite (kind:Mandatory)
+  promote MySQLDataClone then start MySQLFS (kind:Mandatory)
+  start MySQLFS then start WebSite (kind:Mandatory)
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+  WebDataFS with WebDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with WebDataFS (score:INFINITY)
+  MySQLFS with MySQLDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with MySQLFS (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]# pcs cluster cib-push mysql-drbd_cfg
+CIB updated
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Tue Nov 14 17:59:32 2017
+Last change: Tue Nov 14 17:59:14 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+8 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
 ```
 
 
+drbd1 - WebData
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster cib wwwdata-drbd_cfg
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-drbd_cfg resource create WebData ocf:linbit:drbd drbd_resource=wwwdata op monitor interval=60s
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-drbd_cfg resource master WebDataClone WebData master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-drbd_cfg resource show
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Stopped: [ d23-hlth-lc2 d23-hlth-lc4 ]
+[root@d23-hlth-lc2 ~]# pcs cluster cib-push wwwdata-drbd_cfg
+CIB updated
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Tue Nov 14 17:25:33 2017
+Last change: Tue Nov 14 17:25:26 2017 by root via cibadmin on d23-hlth-lc4
+
+2 nodes configured
+4 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+drbd1 - WebData Filesystem
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster cib wwwdata-fs_cfg
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg resource create WebDataFS Filesystem device="/dev/drbd1" directory="/var/www/html" fstype="xfs"
+Assumed agent name 'ocf:heartbeat:Filesystem' (deduced from 'Filesystem')
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg constraint colocation add WebDataFS with WebDataClone INFINITY with-rsc-role=Master
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg constraint order promote WebDataClone then start WebDataFS
+Adding WebDataClone WebDataFS (kind: Mandatory) (Options: first-action=promote then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg constraint colocation add WebSite with WebDataFS INFINITY
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg constraint order WebDataFS then WebSite
+Adding WebDataFS WebSite (kind: Mandatory) (Options: first-action=start then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg constraint
+Location Constraints:
+Ordering Constraints:
+  start ClusterIP then start WebSite (kind:Mandatory)
+  promote WebDataClone then start WebDataFS (kind:Mandatory)
+  start WebDataFS then start WebSite (kind:Mandatory)
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+  WebDataFS with WebDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with WebDataFS (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]# pcs -f wwwdata-fs_cfg resource show
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Stopped
+[root@d23-hlth-lc2 ~]# pcs cluster cib-push wwwdata-fs_cfg
+CIB updated
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Tue Nov 14 17:35:27 2017
+Last change: Tue Nov 14 17:35:05 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+5 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+drbd2 - Sensors and Filesystem
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster cib sensors-drbd_cfg
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg resource create SensorsData ocf:linbit:drbd drbd_resource=sensors op monitor interval=60s
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg resource master SensorsDataClone SensorsData master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg resource create SensorsFS Filesystem device="/dev/drbd2" directory="/home" fstype="xfs"
+Assumed agent name 'ocf:heartbeat:Filesystem' (deduced from 'Filesystem')
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg constraint colocation add SensorsFS with SensorsDataClone INFINITY with-rsc-role=Master
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg constraint order promote SensorsDataClone then start SensorsFS
+Adding SensorsDataClone SensorsFS (kind: Mandatory) (Options: first-action=promote then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg constraint colocation add WebSite with SensorsFS INFINITY
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg constraint order SensorsFS then WebSite
+Adding SensorsFS WebSite (kind: Mandatory) (Options: first-action=start then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg constraint
+Location Constraints:
+Ordering Constraints:
+  start ClusterIP then start WebSite (kind:Mandatory)
+  promote WebDataClone then start WebDataFS (kind:Mandatory)
+  start WebDataFS then start WebSite (kind:Mandatory)
+  promote MySQLDataClone then start MySQLFS (kind:Mandatory)
+  start MySQLFS then start WebSite (kind:Mandatory)
+  promote SensorsDataClone then start SensorsFS (kind:Mandatory)
+  start SensorsFS then start WebSite (kind:Mandatory)
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+  WebDataFS with WebDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with WebDataFS (score:INFINITY)
+  MySQLFS with MySQLDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with MySQLFS (score:INFINITY)
+  SensorsFS with SensorsDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with SensorsFS (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]# pcs -f sensors-drbd_cfg resource show
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: SensorsDataClone [SensorsData]
+     Stopped: [ d23-hlth-lc2 d23-hlth-lc4 ]
+ SensorsFS      (ocf::heartbeat:Filesystem):    Stopped
+[root@d23-hlth-lc2 ~]# pcs cluster cib-push sensors-drbd_cfg
+CIB updated
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Tue Nov 14 18:17:06 2017
+Last change: Tue Nov 14 18:16:54 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+11 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: SensorsDataClone [SensorsData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ SensorsFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+Lastly we need to add the MySQL service to run on the primary node:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster cib mysql-service_cfg
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg resource create MySQLService ocf:heartbeat:mysql \
+> binary="/usr/bin/mysqld_safe" \
+> config="/etc/my.cnf" \
+> datadir="/var/lib/mysql" \
+> pid="/var/run/mysqld/mysqld.pid" \
+> socket="/var/lib/mysql/mysql.sock" \
+> op start timeout=60s \
+> op stop timeout=60s \
+> op monitor interval=20s timeout=30s
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg constraint colocation add MySQLService with MySQLFS INFINITY
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg constraint order MySQLFS then MySQLService
+Adding MySQLFS MySQLService (kind: Mandatory) (Options: first-action=start then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg constraint colocation add WebSite with MySQLService INFINITY
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg constraint order MySQLService then WebSite
+Adding MySQLService WebSite (kind: Mandatory) (Options: first-action=start then-action=start)
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg resource show
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: SensorsDataClone [SensorsData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ SensorsFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ MySQLService   (ocf::heartbeat:mysql): Stopped
+[root@d23-hlth-lc2 ~]# pcs -f mysql-service_cfg constraint
+Location Constraints:
+Ordering Constraints:
+  start ClusterIP then start WebSite (kind:Mandatory)
+  promote WebDataClone then start WebDataFS (kind:Mandatory)
+  start WebDataFS then start WebSite (kind:Mandatory)
+  promote MySQLDataClone then start MySQLFS (kind:Mandatory)
+  start MySQLFS then start WebSite (kind:Mandatory)
+  promote SensorsDataClone then start SensorsFS (kind:Mandatory)
+  start SensorsFS then start WebSite (kind:Mandatory)
+  start MySQLFS then start MySQLService (kind:Mandatory)
+  start MySQLService then start WebSite (kind:Mandatory)
+Colocation Constraints:
+  WebSite with ClusterIP (score:INFINITY)
+  WebDataFS with WebDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with WebDataFS (score:INFINITY)
+  MySQLFS with MySQLDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with MySQLFS (score:INFINITY)
+  SensorsFS with SensorsDataClone (score:INFINITY) (with-rsc-role:Master)
+  WebSite with SensorsFS (score:INFINITY)
+  MySQLService with MySQLFS (score:INFINITY)
+  WebSite with MySQLService (score:INFINITY)
+Ticket Constraints:
+[root@d23-hlth-lc2 ~]# pcs cluster cib-push mysql-service_cfg
+CIB updated
+[root@d23-hlth-lc2 ~]# pcs status
+Cluster name: d23-hlth-dev
+Stack: corosync
+Current DC: d23-hlth-lc4 (version 1.1.16-12.el7_4.4-94ff4df) - partition with quorum
+Last updated: Tue Nov 14 18:32:53 2017
+Last change: Tue Nov 14 18:32:39 2017 by root via cibadmin on d23-hlth-lc2
+
+2 nodes configured
+12 resources configured
+
+Online: [ d23-hlth-lc2 d23-hlth-lc4 ]
+
+Full list of resources:
+
+ ClusterIP      (ocf::heartbeat:IPaddr2):       Started d23-hlth-lc2
+ WebSite        (ocf::heartbeat:apache):        Started d23-hlth-lc2
+ Master/Slave Set: WebDataClone [WebData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ WebDataFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: MySQLDataClone [MySQLData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ MySQLFS        (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ Master/Slave Set: SensorsDataClone [SensorsData]
+     Masters: [ d23-hlth-lc2 ]
+     Slaves: [ d23-hlth-lc4 ]
+ SensorsFS      (ocf::heartbeat:Filesystem):    Started d23-hlth-lc2
+ MySQLService   (ocf::heartbeat:mysql): Started d23-hlth-lc2
+
+Daemon Status:
+  corosync: active/disabled
+  pacemaker: active/disabled
+  pcsd: active/enabled
+```
+
+The initial part of the cluster setup is now complete!
 
 
+## 7. Clone the App
+
+Lastly we will need to pull the app from the git repo and try viewing it on a browser:
+
+Install git:
+
+```bash
+# yum install git
+```
+
+Install php:
+
+```bash
+# yum install php php-mysql
+```
+
+Install the PHP package manager PEAR and use PEAR to install ssh2:
+
+```bash
+# wget http://pear.php.net/go-pear.phar
+# yum install gcc php-devel php-pear libssh2 libssh2-devel make
+# pecl install -f ssh2
+# echo extension=ssh2.so > /etc/php.d/ssh2.ini
+# php -m | grep ssh2
+```
+
+Lastly we will install NodeJS and SambaClient:
+```bash
+# curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+# yum -y install nodejs
+# yum -y install samba samba-client sshpass
+```
+
+Then make sure that the `/var/www/html` folder is empty:
+
+```bash
+[root@d23-hlth-lc2 ~]# rm -r /var/www/html/*
+```
+
+Next you will need to add your SSH key to your user account. See BitBucket for more details about how to add the key. This will print the key to the terminal for you to copy:
+
+```bash
+[root@d23-hlth-lc2 html]# cat ~/.ssh/id_dsa.pub
+```
+
+Clone the repo into the html directory:
+```bash
+[root@d23-hlth-lc2 html]# git clone git@bitbucket.org:neonse/html.git .
+```
+
+At this point you should restart Apache and verify that the site comes up. It won't show any of the data since the database hasn't been copied yet, but you can still see the structure of the site. I like to restart Apache by just setting the running node to standby. This will restart Apache on the next node and should show your webpage:
+
+```bash
+[root@d23-hlth-lc2 ~]# pcs cluster standby d23-hlth-lc2
+```
+
+Lastly, we need to migrate the data to the new cluster. On the server with the database you want:
+
+```bash
+[root@d23-hlth-lc1 ~]# mysqldump -u root -p --opt myDB > myDB.sql
+[root@d23-hlth-lc1 ~]# scp myDB.sql root@d23-hlth-lc2:/tmp/
+```
+
+Now on the primary node of the development cluster, create the database and load it with the dump from the server:
+```bash
+[root@d23-hlth-lc2 ~]# mysql -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 5.6.38 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE myDB;
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> exit
+Bye
+[root@d23-hlth-lc2 ~]# mysql -u root -p myDB < /tmp/myDB.sql
+Enter password:
+```
+
+Now you can visit the site and verify that everything is working.
 
 
-
-
-
-
-
-
+NEXT! Configure STONITH.
 
 
 
