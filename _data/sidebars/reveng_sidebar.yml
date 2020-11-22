@@ -1,0 +1,60 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+
+entries:
+- title: Sidebar
+  product: Reverse Engineering
+  version: 0.1
+  folders:
+
+  - title:
+    output: pdf
+    type: frontmatter
+    folderitems:
+    - title:
+      url: /titlepage.html
+      output: pdf
+      type: frontmatter
+    - title:
+      url: /tocpage.html
+      output: pdf
+      type: frontmatter
+
+  - title: Intro to Reverse Engineering
+    output: web, pdf
+    folderitems:
+    # - title: Intro
+    #   url: /reveng_landing_page.html
+    #   output: web
+
+    - title: Reveng Sample
+      url: /reveng_sample1.html
+      output: web, pdf
+
+    # - title: Sample 2
+    #   url: /p1_sample2.html
+    #   output: web, pdf
+
+    # - title: Sample 3
+    #   url: /p1_sample3.html
+    #   output: web, pdf
+
+  # - title: Another heading
+  #   output: web, pdf
+
+  #   folderitems:
+  #   - title: Sample 4
+  #     url: /p1_sample4.html
+  #     output: web, pdf
+
+  #   - title: Sample 5
+  #     url: /p1_sample5.html
+  #     output: web, pdf
+
+  #   - title: Sample 6
+  #     url: /p1_sample6.html
+  #     output: web, pdf
+
+  #   - title: Sample 7
+  #     url: /p1_sample7.html
+  #     output: web, pdf
