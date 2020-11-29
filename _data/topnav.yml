@@ -4,7 +4,7 @@ topnav:
 - title: Topnav
   items:
     - title: GitHub
-      external_url: https://github.com/danrlyon/danrlyon.github.io
+      external_url: https://github.com/danrlyon/
     # - title: News
     #   url: /news
 
@@ -12,21 +12,19 @@ topnav:
 topnav_dropdowns:
 - title: Topnav dropdowns
   folders:
-    - title: Jekyll Resources
-      folderitems:
-        - title: Jekyll Talk
-          external_url: https://talk.jekyllrb.com
-        - title: Jekyll documentation
-          external_url: http://jekyllrb.com/docs/home/
-        - title: Jekyll on Stack Overflow
-          external_url: http://stackoverflow.com/questions/tagged/jekyll
-        - title: Jekyll on my blog
-          external_url: http://idratherbewriting.com/category-jekyll/
+    # - title: Jekyll Resources
+    #   folderitems:
+    #     - title: Jekyll Talk
+    #       external_url: https://talk.jekyllrb.com
+    #     - title: Jekyll documentation
+    #       external_url: http://jekyllrb.com/docs/home/
+    #     - title: Jekyll on Stack Overflow
+    #       external_url: http://stackoverflow.com/questions/tagged/jekyll
+    #     - title: Jekyll on my blog
+    #       external_url: http://idratherbewriting.com/category-jekyll/
     - title: Projects
       folderitems:
         - title: Jekyll Documentation Theme
           url: /mydoc_introduction.html
         - title: Reverse Engineering Research
-          url: /reveng_sample1.html
-        - title: Product 2
-          url: /p2_landing_page.html
+          url: /reveng_landing_page.html

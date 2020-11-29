@@ -20,24 +20,24 @@ entries:
       output: pdf
       type: frontmatter
 
-  - title: Intro to Reverse Engineering
+  - title: Reverse Engineering
     output: web, pdf
     folderitems:
-    # - title: Intro
-    #   url: /reveng_landing_page.html
-    #   output: web
-
-    - title: Reveng Sample
-      url: /reveng_sample1.html
+    - title: History of Reverse Engineering
+      url: /history_of_reveng.html
       output: web, pdf
 
-    # - title: Sample 2
-    #   url: /p1_sample2.html
-    #   output: web, pdf
+    - title: Modern Reverse Engineering
+      url: /modern_reveng.html
+      output: web, pdf
 
-    # - title: Sample 3
-    #   url: /p1_sample3.html
-    #   output: web, pdf
+    - title: Future of Reverse Engineering
+      url: /future_of_reveng.html
+      output: web, pdf
+
+    - title: A Look at Ghidra
+      url: /look_at_ghidra.html
+      output: web, pdf
 
   # - title: Another heading
   #   output: web, pdf
