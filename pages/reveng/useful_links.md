@@ -23,6 +23,7 @@ folder: reveng
 
 
 ## Other
+- A really excellent [List of Reverse Engineering Resources on GitHub](https://github.com/wtsxDev/reverse-engineering)
 - [Reverse Engineering Biology?!](https://royalsocietypublishing.org/doi/pdf/10.1098/rsif.2013.0505)
 - [@whatguy's Tips and Tricks](https://blog.whtaguy.com/2020/04/guys-30-reverse-engineering-tips-tricks.html)
 - [Reverse Engineering Malicious Code Cheat Sheet](https://digital-forensics.sans.org/media/reverse-engineering-malicious-code-tips.pdf)
