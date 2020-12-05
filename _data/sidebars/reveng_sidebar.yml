@@ -23,6 +23,11 @@ entries:
   - title: Reverse Engineering
     output: web, pdf
     folderitems:
+
+    - title: Intro to Reverse Engineering
+      url: /intro_to_reveng.html
+      output: web, pdf
+
     - title: History of Reverse Engineering
       url: /history_of_reveng.html
       output: web, pdf
@@ -38,6 +43,7 @@ entries:
     - title: A Look at Ghidra
       url: /look_at_ghidra.html
       output: web, pdf
+
 
   # - title: Another heading
   #   output: web, pdf
