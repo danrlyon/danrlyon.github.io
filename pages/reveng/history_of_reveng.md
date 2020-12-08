@@ -52,8 +52,10 @@ Elliot J. Chikofsky and James H. Cross stated, "Reverse engineering is evolving 
 
 
 ## References
-1. https://www.thesoftwareguild.com/blog/what-is-reverse-engineering/
-2. https://www.space.com/21950-who-invented-the-telescope.html
-3. https://www.airforcemag.com/article/0609bomber/
-4. https://www.cs.cmu.edu/~aldrich/courses/654-sp05/ReengineeringTaxonomy.pdf
-5. https://www.fbi.gov/news/stories/morris-worm-30-years-since-first-major-attack-on-internet-110218
+1. Engard, B. (2017, September 18). The Power of Reverse Engineering. Retrieved December 07, 2020, from https://www.thesoftwareguild.com/blog/what-is-reverse-engineering/
+2. Cox, L. (2017, December 21). Who Invented the Telescope? Retrieved December 07, 2020, from https://www.space.com/21950-who-invented-the-telescope.html
+3. Boyne, W. J. (2009, June 01). Carbon Copy Bomber. Retrieved December 07, 2020, from https://www.airforcemag.com/article/0609bomber/
+4. Chikofsky, E., & Cross, J. (1990). Reverse engineering and design recovery: A taxonomy. IEEE Software, 7(1), 13-17. doi:10.1109/52.43044
+5. The Morris Worm. (2018, November 02). Retrieved December 08, 2020, from https://www.fbi.gov/news/stories/morris-worm-30-years-since-first-major-attack-on-internet-110218
+
+{% include links.html %}

@@ -71,7 +71,9 @@ And from a high level it makes a lot of sense. As the software is becoming more 
 
 
 ## References
-1. https://spectrum.ieee.org/computing/software/scrambled-code-keeps-software-safe
-2. https://resources.infosecinstitute.com/topic/reverse-engineering-obfuscated-assemblies/
-3. https://www.eff.org/issues/coders/reverse-engineering-faq
-4. https://www.researchgate.net/publication/340863220_Trends_in_Software_Reverse_Engineering
+1. Alba, D. (2013, September 26). Scrambled Code Keeps Software Safe. Retrieved December 07, 2020, from https://spectrum.ieee.org/computing/software/scrambled-code-keeps-software-safe
+2. Tahiri, S. (2020, October 13). Reverse Engineering Obfuscated Assemblies. Retrieved December 07, 2020, from https://resources.infosecinstitute.com/topic/reverse-engineering-obfuscated-assemblies/
+3. Jue, A., O'Brien, D., Tsukayama, H., Walsh, K., Alimonti, V., & Fischer, C. (2017, May 13). Coders' Rights Project Reverse Engineering FAQ. Retrieved December 08, 2020, from https://www.eff.org/issues/coders/reverse-engineering-faq
+4. Arshad Khan, R. (2020, April). Trends in Software Reverse Engineering. Retrieved December 07, 2020, from https://www.researchgate.net/publication/340863220_Trends_in_Software_Reverse_Engineering
+
+{% include links.html %}

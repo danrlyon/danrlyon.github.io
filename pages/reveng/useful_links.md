@@ -30,3 +30,5 @@ folder: reveng
 - O'Reily Book [*Practical Binary Analysis*](https://learning.oreilly.com/library/view/practical-binary-analysis/9781492071204/)
 - Someone compile a nice [reading list in GitHub](https://github.com/onethawt/reverseengineering-reading-list)
 - [Reverse Engineering Docker Containers](https://appfleet.com/blog/reverse-engineer-docker-images-into-dockerfiles-with-dedockify/)
+
+{% include links.html %}

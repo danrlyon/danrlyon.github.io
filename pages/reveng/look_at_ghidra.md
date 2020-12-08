@@ -78,6 +78,8 @@ If you were following along, congratulations on a program well reversed. Most so
 
 
 ## References
-1. https://medium.com/swlh/intro-to-reverse-engineering-45b38370384
-2. https://crackmes.one
-3. https://ghidra-sre.org/InstallationGuide.html
+1. Li, V. (2020, March 28). Intro to Reverse Engineering. Retrieved December 07, 2020, from https://medium.com/swlh/intro-to-reverse-engineering-45b38370384
+2. s4r (n.d.). Crackmes. Retrieved December 07, 2020, from https://crackmes.one/
+3. Ghidra Installation Guide. (2020, November 13). Retrieved December 07, 2020, from https://ghidra-sre.org/InstallationGuide.html
+
+{% include links.html %}

@@ -6,6 +6,13 @@ toc: false
 permalink: reveng_landing_page.html
 folder: reveng
 ---
+
+Welcome to the living webpage and my Introduction to Cybersecurity research project. In these pages you'll find information about the history of reverse engineering, the state of modern reverse engineering, and a tutorial where we actually do some software reverse engineering. Each section is self contained so view in any order.
+
+# Sections
+
+<div class="row">
+</div>
 <div class="row">
         <div class="col-md-3 col-sm-6">
             <div class="panel panel-default text-center">
@@ -52,21 +59,6 @@ folder: reveng
                 </div>
             </div>
         </div>
-        <!-- <div class="col-md-3 col-sm-6">
-            <div class="panel panel-default text-center">
-                <div class="panel-heading">
-                    <span class="fa-stack fa-5x">
-                          <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                          <i class="fa fa-fast-forward fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-                <div class="panel-body">
-                    <h4>The Future of Reverse Engineering</h4>
-                    <p>Where do we go from here?</p>
-                    <a href="/future_of_reveng.html" class="btn btn-primary">Learn More</a>
-                </div>
-            </div>
-        </div> -->
         <div class="col-md-3 col-sm-6">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">
@@ -99,3 +91,4 @@ folder: reveng
         </div>
 </div>
 
+{% include links.html %}

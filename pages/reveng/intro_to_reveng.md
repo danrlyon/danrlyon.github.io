@@ -21,10 +21,9 @@ Reverse engineering can mean different things when it comes to software. But gen
 - **Code Injection** - introducing code into a vulnerable program in order to change its execution
 
 
-
 ## References
-1. https://www.newworldencyclopedia.org/entry/Reverse_engineering#Reverse_engineering_of_software
-2. https://learning.oreilly.com/library/view/practical-binary-analysis/9781492071204/
-3. https://www.merriam-webster.com/
+1. Reverse engineering. (2019, June 28). Retrieved December 08, 2020, from https://www.newworldencyclopedia.org/entry/Reverse_engineering
+2. Andriesse, D. (2019). Practical binary analysis: Build your own Linux tools for binary instrumentation, analysis, and disassembly. San Francisco, CA: No Starch Press.
+3. The New Merriam-Webster dictionary. (1989). Springfield, MA: Merriam-Webster.
 
 {% include links.html %}

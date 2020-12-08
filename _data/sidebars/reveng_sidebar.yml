@@ -4,7 +4,7 @@
 entries:
 - title: Sidebar
   product: Reverse Engineering
-  version: 0.1
+  version: 1.0
   folders:
 
   - title:
@@ -24,6 +24,10 @@ entries:
     output: web, pdf
     folderitems:
 
+    - title: Project Homepage
+      url: /reveng_landing_page.html
+      output: web
+
     - title: Intro to Reverse Engineering
       url: /intro_to_reveng.html
       output: web, pdf
@@ -35,10 +39,6 @@ entries:
     - title: Modern Reverse Engineering
       url: /modern_reveng.html
       output: web, pdf
-
-    # - title: Future of Reverse Engineering
-    #   url: /future_of_reveng.html
-    #   output: web, pdf
 
     - title: A Look at Ghidra
       url: /look_at_ghidra.html
