@@ -52,7 +52,7 @@ folder: reveng
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
+        <!-- <div class="col-md-3 col-sm-6">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">
                     <span class="fa-stack fa-5x">
@@ -66,7 +66,7 @@ folder: reveng
                     <a href="/future_of_reveng.html" class="btn btn-primary">Learn More</a>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-md-3 col-sm-6">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">

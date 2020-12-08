@@ -8,7 +8,7 @@ folder: reveng
 ---
 
 # Introduction to Software Reverse Engineering
-Reverse engineering can mean different things when it comes to software. But generally speaking it is the process of taking software and converting it into something that is readable in some way and using that result to decipher the functionality of the software.
+Reverse engineering can mean different things when it comes to software. But generally speaking it is the process of taking software and converting it into something that is human readable and using that result to decipher the functionality of the software.
 
 
 ## Common Terminology

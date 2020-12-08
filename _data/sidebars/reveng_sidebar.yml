@@ -36,9 +36,9 @@ entries:
       url: /modern_reveng.html
       output: web, pdf
 
-    - title: Future of Reverse Engineering
-      url: /future_of_reveng.html
-      output: web, pdf
+    # - title: Future of Reverse Engineering
+    #   url: /future_of_reveng.html
+    #   output: web, pdf
 
     - title: A Look at Ghidra
       url: /look_at_ghidra.html

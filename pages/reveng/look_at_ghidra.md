@@ -7,6 +7,7 @@ permalink: look_at_ghidra.html
 folder: reveng
 ---
 
+![Hacker](/images/hacker-5471975_1280.png)
 
 # Ghidra
 [https://ghidra-sre.org/](https://ghidra-sre.org/)<br/>
@@ -29,7 +30,7 @@ $ apt install openjdk-11-jdk
 $ export PATH=<path of extracted JDK dir>/bin:$PATH
 ```
 
-Once Java is installed and configured, you can simply download the archived software and extract it wherever you prefer this software to reside on your machine. Make sure to keep track of where it is installed as you will need to be in the installation directory to run the application. If you’re running Linux, just go ahead and navigate into the unzipped folder and run with this command:
+Once Java is installed and configured, you can simply download the archived software and extract it wherever you prefer this software to reside on your machine. Make sure to keep track of where it is installed as you will need to be in the installation directory to run the application. If you’re running Linux, just go ahead and navigate into the unzipped folder and run Ghidra with this command:
 ```bash
 $ ./ghidraRun
 ```
@@ -50,7 +51,6 @@ Now double click on the file `a.out` to start analyzing it. Ghidra will notice t
 
 There are more features than I could possibly hope to cover in such a short tutorial, so I will just describe what we are using as we go. On the left there is a small box named *Symbol Tree*. A Symbol is a reference to data like imports, variables, or functions. Click on the Symbol named `main` as that tends to be the entry function for C applications like this one.
 
-
 You’ll notice that the center *Listing* window highlights an area in the machine code. If you are new to reverse engineering then this may look like a whole bunch of gibberish but this is actually the raw instructions and data from the program. Since most modern software tends to be massive, you can imagine that you would use the Symbols to navigate to the sections of the code that are of the most interest instead of trying to wrap your head around the entire program.
 
 To take a higher level approach to navigating the code, one can use the *Decompile* view on the far right. This view shows you actual code. If you are following along on your own computer, you may have noticed that the `main()` function is just a couple of lines to call the next function, `login()` and after it logs in, it will return. This is a pretty good indication that we should dig into the login function to understand what is really happening. 
@@ -61,7 +61,7 @@ Use the Symbol Tree view again to locate and click the login function. Since thi
 ## Start Reverse Engineering
 If you are familiar with C code, you can see in the Decompile view that the function asks the user for a password and allocates two buffers of 16 and 8 bytes on the heap using `malloc()` then stores the address to these buffers on the stack and sets the pointer to `1` which is the second `uint` position in puVar1. Since the memory allocation of `__s` was declared first, it is positioned in front of the `puVar1` memory allocation. 
 
-This leads us to the `fgets` function that takes the input from the user and stores it in the allocated memory of `__s`. And comparing the possible input size, 160 bytes, to the size of the allocated memory for `__s`, 16 bytes, we find that if we input more than 16 bytes it will flow over into the next memory allocation in the heap, which happens to be the puVar containing the uid! We know that if the uid is equal to zero so if we write 16 bytes of anything to fill up the first buffer, follow it with another 8 bytes to fill up the first memory location, and finally write 0 to the second memory location we will have tricked the program into thinking that we are admin due to our user id.
+This leads us to the `fgets` function that takes the input from the user and stores it in the allocated memory of `__s`. And comparing the possible input size, 160 bytes, to the size of the allocated memory for `__s`, 16 bytes, we find that if we input more than 16 bytes it will flow over into the next memory allocation in the heap, which happens to be the puVar containing the uid! We know that if the uid is equal to zero then you the program thinks you are admin based on the if statement responses. So if we write 16 bytes of anything to fill up the first buffer, follow it with another 8 bytes to fill up the first memory location, and finally write 0 to the second memory location we will have tricked the program into thinking that we are admin due to our user id.
 
 As the name suggested, this really is a simple overflow example and now we have discovered how to break into the program by reverse engineering the functionality and finding a flaw in the code. If you are using Linux, here is how you can use `printf` to overflow the buffer and gain admin access:
 ```bash
@@ -78,7 +78,6 @@ If you were following along, congratulations on a program well reversed. Most so
 
 
 ## References
-- https://medium.com/swlh/intro-to-reverse-engineering-45b38370384
-- https://crackmes.one
-- https://ghidra-sre.org/InstallationGuide.html
-
+1. https://medium.com/swlh/intro-to-reverse-engineering-45b38370384
+2. https://crackmes.one
+3. https://ghidra-sre.org/InstallationGuide.html
